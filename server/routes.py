@@ -1,15 +1,16 @@
-from flask import Blueprint, request, jsonify
+from flask import Flask, request, jsonify
 from extensions import db  # Import db from extensions
 from models import Tenant, Landlord, Property
 
-routes_blueprint = Blueprint('routes', __name__)
+# Create a Flask app
+app = Flask(__name__)
 
 # Helper function to serialize model instances
 def serialize(model_instance):
     return {c.name: getattr(model_instance, c.name) for c in model_instance.__table__.columns}
 
 # Tenant Routes
-@routes_blueprint.route('/tenants', methods=['GET', 'POST'])
+@app.route('/tenants', methods=['GET', 'POST'])
 def tenants():
     if request.method == 'POST':
         data = request.get_json()
@@ -26,7 +27,7 @@ def tenants():
     tenants = Tenant.query.all()
     return jsonify([serialize(tenant) for tenant in tenants])
 
-@routes_blueprint.route('/tenants/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+@app.route('/tenants/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 def tenant(id):
     tenant = Tenant.query.get(id)
     if tenant is None:
@@ -49,7 +50,7 @@ def tenant(id):
 
 
 # Landlord Routes
-@routes_blueprint.route('/landlords', methods=['GET', 'POST'])
+@app.route('/landlords', methods=['GET', 'POST'])
 def landlords():
     if request.method == 'POST':
         data = request.get_json()
@@ -61,7 +62,7 @@ def landlords():
     landlords = Landlord.query.all()
     return jsonify([serialize(landlord) for landlord in landlords])
 
-@routes_blueprint.route('/landlords/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+@app.route('/landlords/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 def landlord(id):
     landlord = Landlord.query.get(id)
     if landlord is None:
@@ -82,7 +83,7 @@ def landlord(id):
 
 
 # Property Routes
-@routes_blueprint.route('/properties', methods=['GET', 'POST'])
+@app.route('/properties', methods=['GET', 'POST'])
 def properties():
     if request.method == 'POST':
         data = request.get_json()
@@ -97,7 +98,7 @@ def properties():
     properties = Property.query.all()
     return jsonify([serialize(property) for property in properties])
 
-@routes_blueprint.route('/properties/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+@app.route('/properties/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 def property(id):
     property = Property.query.get(id)
     if property is None:
@@ -118,7 +119,7 @@ def property(id):
     return jsonify(serialize(property))
 
 # Rent Payment Route
-@routes_blueprint.route('/tenants/<int:id>/rent', methods=['PUT'])
+@app.route('/tenants/<int:id>/rent', methods=['PUT'])
 def update_rent(id):
     tenant = Tenant.query.get(id)
     if tenant is None:
@@ -128,3 +129,6 @@ def update_rent(id):
     tenant.rent_amount = data['rent_amount']
     db.session.commit()
     return jsonify({'message': 'Tenant rent updated successfully!'})
+
+if __name__ == '__main__':
+    app.run(debug=True)
