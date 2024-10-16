@@ -36,43 +36,36 @@ Welcome to the **RINGBELT REAL ESTATE AGENTS** project! This is a full-stack app
 
 ### Backend Setup
 1. Clone the repository:
-   ```bash
+
    git clone https://github.com/yourusername/ringbelt-real-estate.git
    cd ringbelt-real-estate/server
 
 Install dependencies:
 
-bash
-Copy code
+
 pipenv install
 Set environment variables (you may need to adjust these according to your setup):
 
-bash
-Copy code
+
 export FLASK_APP=app.py
 export FLASK_RUN_PORT=5555
 Run the Flask server:
 
-bash
-Copy code
+
 flask db upgrade  # To set up the database
 python seed.py    # To populate the database with initial data
 python app.py      # To start the Flask application
 Frontend Setup
 Navigate to the client directory:
 
-bash
-Copy code
 cd client
 Install frontend dependencies:
 
-bash
-Copy code
+
 npm install
 Run the React application:
 
-bash
-Copy code
+
 npm start
 Usage
 Open your browser and navigate to http://localhost:3000 to access the frontend application.
